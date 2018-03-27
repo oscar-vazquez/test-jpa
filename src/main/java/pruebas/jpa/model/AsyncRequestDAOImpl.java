@@ -68,9 +68,10 @@ public class AsyncRequestDAOImpl extends AbstractDAO<AsyncRequest> implements As
     public AsyncRequest addExtraData(AsyncRequest a, String dato, String valor) {
         if (a != null) {
             AsyncRequestXtra d = new AsyncRequestXtra(a, dato, valor);
-            a.getDatosExtra().add(d);
             AsyncRequestLog log = new AsyncRequestLog(a, "Agregado dato extra", String.format("Dato = \"%s\", valor = \"%s\"", dato, valor));
+            a.getDatosExtra().add(d);
             a.getLog().add(log);
+            //merge(a);
         }
         return a;
     }

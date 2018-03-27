@@ -2,6 +2,7 @@ package pruebas.jpa.model;
 
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
 import pruebas.jpa.model.asyncrequest.Estados;
 
 import javax.persistence.*;

@@ -13,8 +13,15 @@ public class AsyncRequestXtra {
         @Column(name = "numero_orden", length = 15, nullable = false, updatable = false, unique = true)
         protected String numeroOrden;
 
-        @Column(name = "dato", nullable = false, updatable = false)
+        @Column(name = "dato", length = 15, nullable = false, updatable = false)
         protected String dato;
+
+        public PK() {}
+
+        public PK(String numeroOrden, String dato) {
+            this.numeroOrden = numeroOrden;
+            this.dato = dato;
+        }
 
         @Override
         public int hashCode() {
@@ -42,7 +49,7 @@ public class AsyncRequestXtra {
     @EmbeddedId
     private PK id;
 
-    @Column(name = "valor", nullable = false)
+    @Column(name = "valor", length = 15, nullable = false)
     private String valor;
 
     @Transient
@@ -51,13 +58,14 @@ public class AsyncRequestXtra {
 
     AsyncRequestXtra() {}
 
-    AsyncRequestXtra(AsyncRequest asyncRequest, String dato, String valor) {
-        setAsyncRequest(asyncRequest);
-        setDato(dato);
-        setValor(valor);
+    public AsyncRequestXtra(AsyncRequest asyncRequest, String dato, String valor) {
+        this.id = new PK(asyncRequest.getNumeroOrden(), dato);
+        this.valor = valor;
+        this.asyncRequest = asyncRequest;
     }
 
 
+    /*
     void setAsyncRequest(AsyncRequest asyncRequest) {
         this.asyncRequest = asyncRequest;
         if (id == null) {
@@ -65,25 +73,30 @@ public class AsyncRequestXtra {
         }
         id.numeroOrden = asyncRequest.getNumeroOrden();
     }
+*/
 
     public String getDato() {
         return id.dato;
     }
 
+    /*
     void setDato(String dato) {
         if (id == null) {
             id = new PK();
         }
         id.dato = dato;
     }
+*/
 
     public String getValor() {
         return valor;
     }
 
+    /*
     void setValor(String valor) {
         this.valor = valor;
     }
+*/
 
     @Override
     public String toString() {

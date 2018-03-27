@@ -46,13 +46,13 @@ public class AsyncRequestLog {
     @Column(name = "log_dttm", nullable = false)
     private Date   logDateTime = new Date();
 
-    @Column(name = "estado", nullable = false)
+    @Column(name = "estado", length = 15, nullable = false)
     private String estado;
 
-    @Column(name = "motivo", nullable = false)
+    @Column(name = "motivo", length = 25, nullable = false)
     private String motivo;
 
-    @Column(name = "descr", nullable = false)
+    @Column(name = "descr", length = 255, nullable = false)
     private String descripcion;
 
     @Transient
@@ -61,7 +61,7 @@ public class AsyncRequestLog {
 
     AsyncRequestLog() {}
 
-    AsyncRequestLog(AsyncRequest asyncRequest, String motivo, String descripcion) {
+    public AsyncRequestLog(AsyncRequest asyncRequest, String motivo, String descripcion) {
         setAsyncRequest(asyncRequest);
         setMotivo(motivo);
         setDescripcion(descripcion);
