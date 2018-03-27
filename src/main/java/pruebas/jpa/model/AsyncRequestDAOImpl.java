@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pruebas.jpa.model.asyncrequest.Estados;
 
+import javax.persistence.LockModeType;
 import java.util.Map;
 
 public class AsyncRequestDAOImpl extends AbstractDAO<AsyncRequest> implements AsyncRequestDAO {
@@ -88,6 +89,7 @@ public class AsyncRequestDAOImpl extends AbstractDAO<AsyncRequest> implements As
     @Override
     public AsyncRequest addExtraData(AsyncRequest a, Map<String, String> data) {
         if (a != null) {
+            //entityManager.lock(a, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
             for (Map.Entry<String, String> d: data.entrySet()) {
                 addExtraData(a, d.getKey(), d.getValue());
             }

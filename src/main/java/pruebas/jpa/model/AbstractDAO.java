@@ -1,12 +1,13 @@
 package pruebas.jpa.model;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 public class AbstractDAO<T> {
     protected Class<T> entityClass;
-    private EntityManager entityManager;
+    protected EntityManager entityManager;
 
     public AbstractDAO(Class<T> entityClass) {
         this.entityClass = entityClass;
@@ -33,7 +34,7 @@ public class AbstractDAO<T> {
     }
 
     public T find(Object id) {
-        return entityManager.find(entityClass, id);
+        return entityManager.find(entityClass, id, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
     }
 
     public List<T> findAll() {
