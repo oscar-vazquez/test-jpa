@@ -31,10 +31,10 @@ public class AsyncRequestLog {
             if (this == other) {
                 return true;
             }
-            if (!(other instanceof AsyncRequestLogPK)) {
+            if (!(other instanceof PK)) {
                 return false;
             }
-            AsyncRequestLogPK castOther = (AsyncRequestLogPK)other;
+            PK castOther = (PK)other;
             return this.numeroOrden.equals(castOther.numeroOrden) && this.sequence.equals(castOther.sequence);
         }
     }

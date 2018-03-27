@@ -23,26 +23,7 @@ public class TestJpaService {
     @Path("/cliente/{numero}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCliente(@PathParam("numero")int numero) {
-        logger.info("Buscando suministro {}", numero);
-
-        MapeoClientesResponse cliente = null;
-
-
         ClienteMapping cm = clienteMappingDAO.find(numero);
-
-        logger.info("Rssultado: {}", cm);
-
-        /*
-        if (cm != null) {
-            cliente = new MapeoClientesResponse();
-            cliente.setNumeroCliente(cm.getNumeroCliente());
-            cliente.setContrato(cm.getContrato());
-            cliente.setNumeroSuministro(cm.getNumeroSuministro());
-            cliente.setPod(cm.getPod());
-            cliente.setTarifa(cm.getTarifa());
-        }
-        */
-
         return Response.ok(cm).build();
     }
 
@@ -50,12 +31,7 @@ public class TestJpaService {
     @Path("/asyncrequest/{numero}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAsyncRequest(@PathParam("numero")String numero) {
-        logger.info("Buscando async request {}", numero);
-
         pruebas.jpa.model.AsyncRequest ar = asyncRequestDAO.find(numero) ;
-
-        logger.info("Rssultado: {}", ar);
-
         return Response.ok(ar).build();
     }
 
@@ -63,8 +39,20 @@ public class TestJpaService {
     @Path("/asyncrequest")
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAsyncRequest(@ApiParam pruebas.jpa.AsyncRequest a) {
-        pruebas.jpa.model.AsyncRequest s = asyncRequestDAO.add(a.getCasoSFDSC(), a.getProceso(), a.getOperacion());
-        return Response.ok(s).build();
+        pruebas.jpa.model.AsyncRequest x = null;
+        if (a.getNumeroOrden() != null) {
+            x = asyncRequestDAO.find(a.getNumeroOrden());
+        }
+        if (x == null) {
+            x = asyncRequestDAO.add(a.getCasoSFDSC(), a.getProceso(), a.getOperacion());
+        }
+        if (a.getDatos() != null) {
+            for (AsyncRequest.Data d : a.getDatos()) {
+                asyncRequestDAO.addExtraData(x, d.getDato(), d.getValor());
+
+            }
+        }
+        return Response.ok(x).build();
     }
 
     @PUT
@@ -77,11 +65,6 @@ public class TestJpaService {
             a = asyncRequestDAO.find(numeroOrden);
         }
         else {
-            /*
-            a = asyncRequestDAO.find(numeroOrden);
-            a.setEstado(Estados.getEnum(x.getEstado()));
-            */
-            asyncRequestDAO.setEstado(numeroOrden, Estados.getEnum(x.getEstado()));
         }
         return Response.ok(a).build();
     }

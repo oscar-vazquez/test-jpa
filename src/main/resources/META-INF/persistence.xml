@@ -10,6 +10,7 @@
         <class>pruebas.jpa.model.ClienteMapping</class>
         <class>pruebas.jpa.model.AsyncRequest</class>
         <class>pruebas.jpa.model.AsyncRequestLog</class>
+        <class>pruebas.jpa.model.AsyncRequestXtra</class>
 
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 

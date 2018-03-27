@@ -1,17 +1,38 @@
 package pruebas.jpa;
 
 import java.util.Date;
+import java.util.List;
 
 public class AsyncRequest {
+    public static class Data {
+        private String dato;
+        private String valor;
+
+        public Data() {}
+
+        public String getDato() {
+            return dato;
+        }
+
+        public void setDato(String dato) {
+            this.dato = dato;
+        }
+
+        public String getValor() {
+            return valor;
+        }
+
+        public void setValor(String valor) {
+            this.valor = valor;
+        }
+    }
+
     private String casoSFDSC;
-
     private String proceso;
-
     private String operacion;
+    private String numeroOrden;
 
-    private Date recibido;
-
-    private String estado;
+    private List<Data> datos;
 
     public String getCasoSFDSC() {
         return casoSFDSC;
@@ -37,19 +58,19 @@ public class AsyncRequest {
         this.operacion = operacion;
     }
 
-    public Date getRecibido() {
-        return recibido;
+    public String getNumeroOrden() {
+        return numeroOrden;
     }
 
-    public void setRecibido(Date recibido) {
-        this.recibido = recibido;
+    public void setNumeroOrden(String numeroOrden) {
+        this.numeroOrden = numeroOrden;
     }
 
-    public String getEstado() {
-        return estado;
+    public List<Data> getDatos() {
+        return datos;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setDatos(List<Data> datos) {
+        this.datos = datos;
     }
 }

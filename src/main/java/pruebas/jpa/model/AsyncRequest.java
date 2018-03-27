@@ -5,9 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import pruebas.jpa.model.asyncrequest.Estados;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @EntityListeners(AsyncRequest.EntityListener.class)
@@ -52,6 +50,10 @@ public class AsyncRequest {
     private List<AsyncRequestLog> log = new ArrayList<>();
 
 
+    @OneToMany(mappedBy = "id.numeroOrden", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<AsyncRequestXtra> datosExtra = new HashSet<>();
+
+
     @SuppressWarnings("unused")
     AsyncRequest() {
     }
@@ -61,8 +63,6 @@ public class AsyncRequest {
         this.casoSFDSC = casoSFDC;
         this.proceso = proceso;
         this.operacion = operacion;
-        AsyncRequestLog log = new AsyncRequestLog(this, "Aceptado", "Request recibido y aceptado para procesar");
-        getLog().add(log);
     }
 
     private void init() {
@@ -110,26 +110,17 @@ public class AsyncRequest {
     }
 
     void setEstado(Estados estado) {
-        String estadoActual = strEstado;
-
         this.estado = estado;
         this.strEstado = estado.toString();
-
-        AsyncRequestLog log = new AsyncRequestLog(
-                this,
-                "Cambio Estado",
-                String.format("Cambio estado de \"%s\" a \"%s\"", estadoActual, strEstado));
-        getLog().add(log);
-    }
-
-    public void moveToNextEstado() {
-        setEstado(estado.next());
     }
 
     public List<AsyncRequestLog> getLog() {
         return log;
     }
 
+    public Set<AsyncRequestXtra> getDatosExtra() {
+        return datosExtra;
+    }
 
     @Override
     public String toString() {
