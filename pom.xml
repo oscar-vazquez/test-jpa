@@ -75,6 +75,31 @@
             <version>1.7.7.redhat-2</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jpa_2.0_spec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-cxf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-jpa</artifactId>
+        </dependency>
+        <!--
+        <dependency>
             <groupId>org.apache.servicemix.specs</groupId>
             <artifactId>org.apache.servicemix.specs.jsr339-api-2.0</artifactId>
             <scope>provided</scope>
@@ -98,67 +123,40 @@
             <artifactId>geronimo-jpa_2.0_spec</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jpa</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jpa_2.0_spec</artifactId>
-        </dependency>
+        -->
 </dependencies>
 
     <build>
+        <defaultGoal>validate compile</defaultGoal>
         <finalName>${project.artifactId}</finalName>
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <filtering>true</filtering>
+                <filtering>false</filtering>
             </resource>
         </resources>
-
         <plugins>
-            <!-- Skip Test by default and enable them only in Test profile -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${version.maven-surefire-plugin}</version>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
-            </plugin>
-            <!-- Compiler plugin enforces Java 1.7 compatibility and activates annotation processors -->
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven-resources-plugin-version}</version>
-                <executions>
-                    <execution>
-                        <id>filter</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>resources</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>fabric8-maven-plugin</artifactId>
-                <version>1.2.0.redhat-630187</version>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <compilerArgs>
+                        <arg>-Xlint:unchecked</arg>
+                        <arg>-Xlint:deprecation</arg>
+                    </compilerArgs>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -168,65 +166,16 @@
                 <configuration>
                     <manifestLocation>target/META-INF</manifestLocation>
                     <instructions>
+                        <Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
+                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                         <Import-Package>
-                            org.apache.camel.*,
-                            org.osgi.service.*,
-                            org.slf4j,
-                            javax.persistence,
                             org.hibernate.proxy,
                             javassist.util.proxy,
-                            javax.jws;version="[0,3)",
-                            javax.wsdl,
-                            javax.xml.namespace,
-                            org.apache.cxf.helpers,
-                            org.osgi.service.blueprint,
-                            io.fabric8.cxf.endpoint,
-                            org.apache.cxf.transport.http,
-                            javax.ws.rs,
-                            javax.ws.rs.core,
-                            javax.xml.bind.annotation,
-                            io.fabric8.cxf,
-                            javax.annotation;version="[1.1.0,2.0.0)",
-                            com.fasterxml.jackson.annotation,
-                            com.fasterxml.jackson.core,
-                            com.fasterxml.jackson.databind,
-                            com.fasterxml.jackson.jaxrs.json,
-                            javax.ws.rs.ext,*
+                            *
                         </Import-Package>
-                        <Import-Service>
-                            org.apache.aries.blueprint.NamespaceHandler;
-                            osgi.service.blueprint.namespace=http://cxf.apache.org/transports/http/configuration
-                        </Import-Service>
-                        <Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
-                        <manifestLocation>target/META-INF</manifestLocation>
                     </instructions>
                 </configuration>
             </plugin>
-            <!--
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>${build-helper-maven-plugin-version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-artifacts</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                        <configuration>
-                            <artifacts>
-                                <artifact>
-                                    <file>target/classes/features.xml</file>
-                                    <type>xml</type>
-                                    <classifier>features</classifier>
-                                </artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
         </plugins>
     </build>
 

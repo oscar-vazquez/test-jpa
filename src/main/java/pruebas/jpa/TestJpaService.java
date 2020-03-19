@@ -1,13 +1,11 @@
 package pruebas.jpa;
 
-import io.swagger.annotations.ApiParam;
+import org.jboss.logging.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pruebas.jpa.model.*;
-import pruebas.jpa.model.asyncrequest.Estados;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,10 +16,24 @@ public class TestJpaService {
 
     private ClienteMappingDAO clienteMappingDAO;
     private AsyncRequestDAO asyncRequestDAO;
+    private MotivoSubmotivoDAO motivoSubmotivoDAO;
+
+    @GET
+    @Path("/motivo/{param}")
+    public Response getMotivo(@PathParam("param") String param) {
+        logger.debug("parm = {}", param);
+        String[] x = param.split("-");
+        logger.debug("split: {}", String.join(", ",  x));
+        logger.debug("dao: {}", motivoSubmotivoDAO);
+        MotivoSubmotivo m = motivoSubmotivoDAO.find(x[0], x[1], x[2]);
+        if (m == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("NO EXISTE") .build();
+        }
+        return Response.ok(m.toString()).build();
+    }
 
     @GET
     @Path("/cliente/{numero}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getCliente(@PathParam("numero")int numero) {
         ClienteMapping cm = clienteMappingDAO.find(numero);
         return Response.ok(cm).build();
@@ -29,7 +41,6 @@ public class TestJpaService {
 
     @GET
     @Path("/asyncrequest/{numero}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getAsyncRequest(@PathParam("numero")String numero) {
         pruebas.jpa.model.AsyncRequest ar = asyncRequestDAO.find(numero) ;
         return Response.ok(ar).build();
@@ -37,16 +48,14 @@ public class TestJpaService {
 
     @POST
     @Path("/asyncrequest/add")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addAsyncRequest(@ApiParam pruebas.jpa.AsyncRequest a) {
+    public Response addAsyncRequest(pruebas.jpa.AsyncRequest a) {
         pruebas.jpa.model.AsyncRequest x = asyncRequestDAO.add(a.getCasoSFDSC(), a.getProceso(), a.getOperacion());
         return Response.ok(x).build();
     }
 
     @POST
     @Path("/asyncrequest/xtra")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addExtraInfo(@ApiParam pruebas.jpa.AsyncRequest a) {
+    public Response addExtraInfo(pruebas.jpa.AsyncRequest a) {
         Map<String, String> data = new HashMap<>();
         for (AsyncRequest.Data d : a.getDatos()) {
             data.put(d.getDato(), d.getValor());
@@ -57,8 +66,7 @@ public class TestJpaService {
 
     @PUT
     @Path("/asyncrequest/{numeroOrden}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateEstadoAsyncRequest(@PathParam("numeroOrden") String numeroOrden, @ApiParam pruebas.jpa.AsyncRequest x) {
+    public Response updateEstadoAsyncRequest(@PathParam("numeroOrden") String numeroOrden, pruebas.jpa.AsyncRequest x) {
         pruebas.jpa.model.AsyncRequest a = asyncRequestDAO.moveToNextState(numeroOrden);
         return Response.ok(a).build();
     }
@@ -69,5 +77,9 @@ public class TestJpaService {
 
     public void setAsyncRequestDAO(AsyncRequestDAO asyncRequestDAO) {
         this.asyncRequestDAO = asyncRequestDAO;
+    }
+
+    public void setMotivoSubmotivoDAO(MotivoSubmotivoDAO motivoSubmotivoDAO) {
+        this.motivoSubmotivoDAO = motivoSubmotivoDAO;
     }
 }

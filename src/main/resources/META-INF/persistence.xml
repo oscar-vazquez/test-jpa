@@ -2,7 +2,7 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              version="1.0">
-    <persistence-unit name="fuse" transaction-type="JTA">
+    <persistence-unit name="test-jpa" transaction-type="JTA">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
 
         <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/FuseDS)</jta-data-source>
@@ -11,6 +11,7 @@
         <class>pruebas.jpa.model.AsyncRequest</class>
         <class>pruebas.jpa.model.AsyncRequestLog</class>
         <class>pruebas.jpa.model.AsyncRequestXtra</class>
+        <class>pruebas.jpa.model.MotivoSubmotivo</class>
 
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 

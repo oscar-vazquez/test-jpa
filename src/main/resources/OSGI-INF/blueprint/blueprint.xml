@@ -16,6 +16,7 @@
             <bean class="pruebas.jpa.TestJpaService">
                 <property name="clienteMappingDAO" ref="clienteMappingDAO"/>
                 <property name="asyncRequestDAO" ref="asyncRequestDAO"/>
+                <property name="motivoSubmotivoDAO" ref="motivoSubmotivoDAO" />
             </bean>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
@@ -38,11 +39,11 @@
     </cxf:bus>
 
     <bean id="clienteMappingDAO" class="pruebas.jpa.model.ClienteMappingDAOImpl">
-        <jpa:context unitname="fuse" property="entityManager"/>
+        <jpa:context unitname="test-jpa" property="entityManager"/>
     </bean>
 
     <bean id="asyncRequestDAO" class="pruebas.jpa.model.AsyncRequestDAOImpl">
-        <jpa:context unitname="fuse" property="entityManager"/>
+        <jpa:context unitname="test-jpa" property="entityManager"/>
         <tx:transaction method="*" value="Required" />
         <!--
         <tx:transaction method="add" value="Required"/>
@@ -50,6 +51,10 @@
         <tx:transaction method="setEstado" value="Required"/>
         <tx:transaction method="*" value="Supports"/>
         -->
+    </bean>
+
+    <bean id="motivoSubmotivoDAO" class="pruebas.jpa.model.MotivoSubmotivoDAOImpl">
+        <jpa:context unitname="test-jpa" property="entityManager"/>
     </bean>
 
     <!--
