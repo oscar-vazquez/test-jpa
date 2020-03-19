@@ -1,5 +1,7 @@
 package pruebas.jpa.model;
 
 public interface MotivoSubmotivoDAO {
-    MotivoSubmotivo find(String motivo, String submotivo, String sistema);
+    MotivoSubmotivo findConversionMAC(String motivo, String submotivo);
+    MotivoSubmotivo findConversionCandela(String motivo, String submotivo);
+    MotivoSubmotivo find(String motivo, String submotivo, MotivoSubmotivo.Sistema sistema);
 }

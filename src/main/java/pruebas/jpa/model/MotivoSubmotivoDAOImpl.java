@@ -12,9 +12,19 @@ public class MotivoSubmotivoDAOImpl implements MotivoSubmotivoDAO {
     private EntityManager entityManager;
 
     @Override
-    public MotivoSubmotivo find(String motivo, String submotivo, String sistema) {
+    public MotivoSubmotivo findConversionMAC(String motivo, String submotivo) {
+        return find(motivo, submotivo, MotivoSubmotivo.Sistema.MAC);
+    }
+
+    @Override
+    public MotivoSubmotivo findConversionCandela(String motivo, String submotivo) {
+        return find(motivo, submotivo, MotivoSubmotivo.Sistema.Candela);
+    }
+
+    @Override
+    public MotivoSubmotivo find(String motivo, String submotivo, MotivoSubmotivo.Sistema sistema) {
         logger.debug("Buscado motivo {}, submotivo {}", motivo, submotivo);
-        return entityManager.find(MotivoSubmotivo.class, new MotivoSubmotivo.MotivoSubmotivoPK(motivo, submotivo, MotivoSubmotivo.Sistema.get(sistema)));
+        return entityManager.find(MotivoSubmotivo.class, new MotivoSubmotivo.MotivoSubmotivoPK(motivo, submotivo, sistema));
     }
 
     @SuppressWarnings("unused")

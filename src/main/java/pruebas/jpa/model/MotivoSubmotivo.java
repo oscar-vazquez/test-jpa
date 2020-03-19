@@ -35,7 +35,7 @@ public class MotivoSubmotivo {
     @EmbeddedId
     private MotivoSubmotivoPK primaryKey;
 
-    @Column(name = "motivo_destino")
+    @Column(name = "motivo_destino", nullable = false, length = 4)
     private String motivoDestino;
 
     @Column(name = "submotivo_destino")

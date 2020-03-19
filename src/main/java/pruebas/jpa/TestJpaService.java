@@ -25,7 +25,17 @@ public class TestJpaService {
         String[] x = param.split("-");
         logger.debug("split: {}", String.join(", ",  x));
         logger.debug("dao: {}", motivoSubmotivoDAO);
-        MotivoSubmotivo m = motivoSubmotivoDAO.find(x[0], x[1], x[2]);
+        MotivoSubmotivo m = null;
+        switch (x[2]) {
+            case "M":
+                m = motivoSubmotivoDAO.findConversionMAC(x[0], x[1]);
+                break;
+            case "C":
+                m = motivoSubmotivoDAO.findConversionCandela(x[0], x[1]);
+                break;
+            default:
+                throw new RuntimeException("Sistema desconocido");
+        }
         if (m == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("NO EXISTE") .build();
         }
